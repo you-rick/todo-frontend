@@ -1,0 +1,55 @@
+@import "../../../../assets/styles/variables";
+@import "../../../../assets/styles/mixins";
+
+.iconBtn.iconBtn {
+  border: 1px solid;
+  margin-left: 10px;
+}
+
+.todoWrap {
+  position: relative;
+  background: #fff;
+  padding: 1rem 1rem 1rem 1.5rem;
+  margin-bottom: 1rem;
+  @include radius(4px);
+  @include shadow(0 2px 3px 0 rgba(0, 0, 0, 0.1));
+
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 0.5rem;
+    height: 100%;
+    background: #ccc;
+    @include radius(4px 0 0 4px);
+  }
+}
+
+[data-status*='todoLabel_1']:before {
+  background: $todo_created
+}
+
+[data-status*='todoLabel_2']:before {
+  background: $todo_progress
+}
+
+[data-status*='todoLabel_3'] {
+  &:before {
+    background: $todo_finished
+  }
+
+  .task {
+    text-decoration: line-through;
+  }
+}
+
+.label {
+
+}
+
+.task {
+  flex-basis: 70%;
+}
+

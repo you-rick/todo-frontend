@@ -1,0 +1,198 @@
+@import "variables";
+
+$experimental: true !default; // set True for support Old Browsers
+
+// custom mixins
+@mixin full-width() {
+  width: 100%;
+  float: left;
+  position: relative;
+}
+
+@mixin flex-full-width() {
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+@function rem($size) {
+  $remSize: $size / 16px;
+  @return #{$remSize}rem;
+}
+
+@function em($size) {
+  $remSize: $size / 16px;
+  @return #{$remSize}em;
+}
+
+@mixin font-smooth-retina {
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    @content;
+  }
+}
+
+// Responsive
+@mixin if-portrait {
+  @media (max-aspect-ratio: 3/4) {
+    @content;
+  }
+}
+
+
+@mixin from-lg-screen {
+  @media only screen and (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin till-lg-screen {
+  @media only screen and (max-width: 1279px) {
+    @content;
+  }
+}
+
+@mixin from-md-screen {
+  @media only screen and (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin till-md-screen {
+  @media only screen and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin from-sm-screen {
+  @media only screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin till-sm-screen {
+  @media only screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin from-xs-screen {
+  @media only screen and (min-width: 576px) {
+    @content;
+  }
+}
+
+@mixin till-xs-screen {
+  @media only screen and (max-width: 575px) {
+    @content;
+  }
+}
+
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin cross-browser($property, $css) {
+  -webkit-#{$property} : $css;
+  -moz-#{$property} : $css;
+  -o-#{$property} : $css;
+  #{$property} : $css;
+}
+
+@mixin abs-pos($top: auto, $right: auto, $bottom: auto, $left: auto) {
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+  position: absolute;
+}
+
+@mixin background-size($value) {
+  -webkit-background-size: $value;
+  background-size: $value;
+}
+
+@mixin box-sizing($type:border-box) {
+  @if $experimental {
+    -moz-box-sizing: $type;
+    -webkit-box-sizing: $type;
+  }
+  box-sizing: $type;
+}
+
+@mixin radius($radius) {
+  @if $radius {
+    @if $experimental {
+      -webkit-border-radius: $radius;
+    }
+    border-radius: $radius;
+  }
+}
+
+@mixin shadow($value) {
+  @if $experimental {
+    -webkit-box-shadow: $value;
+    -moz-box-shadow: $value;
+  }
+  box-shadow: $value;
+}
+
+@mixin fieldPlaceholderColor($color) {
+  *::-webkit-input-placeholder {
+    color: $color !important;
+  }
+
+  *:-moz-placeholder {
+    color: $color !important;
+  }
+
+  *::-moz-placeholder {
+    color: $color !important;
+  }
+  *:ms-input-placeholder {
+    color: $color !important;
+  }
+}
+
+@mixin smooth($speed) {
+  @if $experimental {
+    -webkit-transition: all $speed ease-out;
+    -moz-transition: all $speed ease-out;
+    -o-transition: all $speed ease-out;
+  }
+  transition: all $speed ease-out;
+}
+
+@mixin transform($value) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+
+@mixin animation-delay($time) {
+  @if $experimental {
+    -webkit-animation-delay: $time;
+    -moz-animation-delay: $time;
+    -o-animation-delay: $time;
+  }
+  animation-delay: $time;
+}
+
+@mixin animation-duration($time) {
+  @if $experimental {
+    -webkit-animation-duration: $time;
+    -moz-animation-duration: $time;
+    -o-animation-duration: $time;
+  }
+  animation-duration: $time;
+}
+
+
