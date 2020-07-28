@@ -9,8 +9,8 @@ import {requestTodos} from "../../../store/todoReducer";
 
 const Todos = (props) => {
     useEffect(() => {
-        props.requestTodos();
-    }, []);
+        props.isAuth && props.requestTodos();
+    }, [props.isAuth]);
 
 
     if (!props.isAuth) {

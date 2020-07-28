@@ -4,14 +4,20 @@ import {getProfile} from "./profileReducer";
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
 const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
 
+
 // Initial Data
-let initialState = {
+export type InitialStateType = {
+    initialized: boolean,
+    isDataFetching: boolean
+}
+
+let initialState: InitialStateType = {
     initialized: false,
     isDataFetching: false
 };
 
 
-const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action:any):InitialStateType => {
     switch (action.type) {
         case INITIALIZED_SUCCESS:
             return {
@@ -26,14 +32,28 @@ const appReducer = (state = initialState, action) => {
     }
 };
 
+// Action Creators Types
+type toggleIsFetchingActionType = {
+    type: typeof TOGGLE_IS_FETCHING,
+    isDataFetching:boolean
+}
+type initializedSuccessActionType = {
+    type: typeof INITIALIZED_SUCCESS
+}
+
 // Action Creators
-export const toggleIsFetching = (isDataFetching) => ({type: TOGGLE_IS_FETCHING, isDataFetching});
-export const initializedSuccess = () => ({type: INITIALIZED_SUCCESS});
+export const toggleIsFetching = (isDataFetching:boolean):toggleIsFetchingActionType => ({
+    type: TOGGLE_IS_FETCHING,
+    isDataFetching
+});
+export const initializedSuccess = ():initializedSuccessActionType => ({
+    type: INITIALIZED_SUCCESS
+});
 
 
 // Thunks
 export const initializeApp = () => {
-    return (dispatch) => {
+    return (dispatch:any) => {
         let promiseArray = [];
         localStorage.getItem('token') && promiseArray.push(dispatch(getProfile()));
         dispatch(toggleIsFetching(true));
