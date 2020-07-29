@@ -8,6 +8,7 @@ import reducersGroup from "./reducers";
 export const history = createBrowserHistory();
 
 // For Redux Browser Extension
+// @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
@@ -17,6 +18,7 @@ const store = createStore(
         thunkMiddleware
     ))
 );
+// @ts-ignore
 window.__store__ = store;
 
 export default store;

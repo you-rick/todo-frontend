@@ -1,4 +1,5 @@
 import {getProfile} from "./profileReducer";
+import {AppStateInterface} from "../shared/interfaces/app.interface";
 
 // Actions
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
@@ -6,18 +7,13 @@ const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
 
 
 // Initial Data
-export type InitialStateType = {
-    initialized: boolean,
-    isDataFetching: boolean
-}
-
-let initialState: InitialStateType = {
+let initialState: AppStateInterface = {
     initialized: false,
     isDataFetching: false
 };
 
 
-const appReducer = (state = initialState, action:any):InitialStateType => {
+const appReducer = (state = initialState, action:any):AppStateInterface => {
     switch (action.type) {
         case INITIALIZED_SUCCESS:
             return {

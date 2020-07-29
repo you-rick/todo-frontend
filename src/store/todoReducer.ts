@@ -2,7 +2,7 @@ import {toggleIsFetching} from "./appReducer";
 import {hideNote, setNote} from "./notificationReducer";
 import {todoAPI} from "../api/api";
 import {reset} from "redux-form";
-import {ApiResponse} from "../shared/interfaces/api-response.interface";
+import {ApiTodoResponse} from "../shared/interfaces/api-response.interface";
 import {AxiosResponse} from "axios";
 
 
@@ -80,7 +80,7 @@ export const resetCurrentTodo = ():resetCurrentTodoActionType => ({
 export const requestTodos = () => {
     return (dispatch:any) => {
         todoAPI.getTodos()
-            .then((response:AxiosResponse<ApiResponse<TodoType>>) => {
+            .then((response:AxiosResponse<ApiTodoResponse<TodoType>>) => {
                 let res = response.data;
                 if (res.status) {
                     dispatch(setTodos(res.data));
@@ -93,7 +93,7 @@ const handleTodo = (dispatch:any, data:TodoType | TodoType['_id'] , apiMethod:an
     dispatch(toggleIsFetching(true));
     dispatch(hideNote());
     apiMethod(data)
-        .then((response:AxiosResponse<ApiResponse<TodoType>>) => {
+        .then((response:AxiosResponse<ApiTodoResponse<TodoType>>) => {
             let res = response.data;
             dispatch(toggleIsFetching(false));
             if (res.status) {

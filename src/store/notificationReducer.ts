@@ -1,23 +1,20 @@
+import {NotificationStateInterface} from "../shared/interfaces/notification.interface";
+
 // Actions
 export const SET_NOTE = "SET_NOTE";
 export const HIDE_NOTE = "HIDE_NOTE";
 
 // Initial Data
-export type InitialStateType = {
-    msg: any,
-    type: string,
-    error: boolean,
-    success: boolean
-}
 
-const initState: InitialStateType = {
+
+const initState: NotificationStateInterface = {
     msg: "",
     type: "info",
     error: false,
     success: false
 };
 
-const notificationReducer = (state = initState, action: any):InitialStateType => {
+const notificationReducer = (state = initState, action: any):NotificationStateInterface => {
     switch (action.type) {
         case SET_NOTE:
             return {...state, ...action.body};
@@ -32,7 +29,7 @@ const notificationReducer = (state = initState, action: any):InitialStateType =>
 // Action Creators Types
 type setNoteActionType = {
     type: typeof SET_NOTE,
-    body: InitialStateType
+    body: NotificationStateInterface
 }
 type hideNoteActionType = {
     type: typeof HIDE_NOTE
@@ -40,7 +37,7 @@ type hideNoteActionType = {
 
 
 // Action Creators
-export const setNote = (body:InitialStateType):setNoteActionType => ({
+export const setNote = (body:NotificationStateInterface):setNoteActionType => ({
     type: SET_NOTE,
     body: body
 });
