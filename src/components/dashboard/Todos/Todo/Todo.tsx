@@ -1,13 +1,22 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {connect} from "react-redux";
 import {Grid, Typography, IconButton} from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import s from './Todo.module.scss';
-import {statusList} from "../todosList";
+import {statusList} from "../statusList";
 import {deleteTodo, setCurrentTodo} from "../../../../store/todoReducer";
+import {Todo as TodoInterface} from "../../../../shared/interfaces/todo.interface";
 
-const Todo = (props) => {
+type DispatchPropsType = {
+    deleteTodo: (_id: string | null) => void,
+    setCurrentTodo: (data: TodoInterface) => void
+}
+
+type Props = DispatchPropsType & TodoInterface;
+
+
+const Todo:FC<Props> = (props) => {
     const status = statusList.filter(el => el.id === props.status);
 
     const handleDelete = () => {
@@ -35,8 +44,4 @@ const Todo = (props) => {
     )
 };
 
-const mapStateToProps = (state) => ({
-
-});
-
-export default connect(mapStateToProps, {deleteTodo, setCurrentTodo})(Todo);
+export default connect(null, {deleteTodo, setCurrentTodo})(Todo);

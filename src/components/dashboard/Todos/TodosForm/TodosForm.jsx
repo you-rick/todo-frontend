@@ -6,7 +6,7 @@ import {postTodo, updateTodo, resetCurrentTodo} from "../../../../store/todoRedu
 import {connect} from "react-redux";
 import validate from "./validate";
 import s from "./TodosForm.module.scss";
-import {statusList} from "../todosList";
+import {statusList} from "../statusList";
 
 
 const TodosFormBox = (props) => {

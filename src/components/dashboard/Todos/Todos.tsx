@@ -1,13 +1,22 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, FC} from 'react';
 import {connect} from "react-redux";
 import {Redirect} from 'react-router-dom';
 import {Box, Container, Typography} from "@material-ui/core";
 import TodosForm from "./TodosForm/TodosForm";
 import Todo from "./Todo/Todo";
 import {requestTodos} from "../../../store/todoReducer";
+import {TodoStateInterface} from "../../../shared/interfaces/todo.interface";
+import {RootStateInterface} from "../../../store/reducers";
 
+type Props = {
+    isAuth: boolean,
+    requestTodos: () => void,
+    name: string | null,
+    todos: TodoStateInterface['list']
 
-const Todos = (props) => {
+}
+
+const Todos:FC<Props> = (props) => {
     useEffect(() => {
         props.isAuth && props.requestTodos();
     }, [props.isAuth]);
@@ -26,14 +35,14 @@ const Todos = (props) => {
                 <TodosForm/>
 
                 <Box p="2rem 0 0">
-                    {props.todos.map(todo => <Todo key={todo._id} {...todo} />)}
+                    {props.todos.map((todo, index) => <Todo key={index} {...todo} />)}
                 </Box>
             </Container>
         </Box>
     )
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state:RootStateInterface) => ({
     isAuth: state.profile.isAuth,
     name: state.profile.name,
     todos: state.todos.list
