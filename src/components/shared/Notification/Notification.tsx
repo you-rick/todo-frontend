@@ -1,15 +1,26 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, SyntheticEvent, FC} from "react";
 import {Snackbar,} from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import {hideNote} from "../../../store/notificationReducer";
 import {connect} from "react-redux";
 
+type AlertTypes = {
+    onClose: (event:SyntheticEvent, reason?:string) => void,
+    severity: 'error' | 'info' | 'success' | 'warning',
+    children: any
+}
 
-const Alert = (props) => {
+const Alert: FC<AlertTypes> = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />
 };
 
-const Notification = ({type, msg, hideNote}) => {
+type NotificationType = {
+    type: 'error' | 'info' | 'success' | 'warning',
+    msg: any,
+    hideNote: () => void
+}
+
+const Notification: FC<NotificationType> = ({type, msg, hideNote}) => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -18,30 +29,27 @@ const Notification = ({type, msg, hideNote}) => {
     }, [msg]);
 
 
-    const handleClose = (event, reason) => {
+    const handleClose = (event:SyntheticEvent, reason?:string) => {
         if (reason === 'clickaway') {
             return;
         }
 
         hideNote();
         setOpen(false);
-
     };
 
     return (
         <>
             {(msg && type) &&
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={type}>
+                <Alert severity={type} onClose={handleClose}>
                     {msg}
                 </Alert>
             </Snackbar>
             }
         </>
-
     );
 };
 
-const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, {hideNote})(Notification);
+export default connect(null, {hideNote})(Notification);

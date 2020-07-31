@@ -5,8 +5,6 @@ export const SET_NOTE = "SET_NOTE";
 export const HIDE_NOTE = "HIDE_NOTE";
 
 // Initial Data
-
-
 const initState: NotificationStateInterface = {
     msg: "",
     type: "info",

@@ -95,7 +95,7 @@ export const login = (email:string, password:string) => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
 
-        profileAPI.login({email, password})
+        profileAPI.login(email, password)
             .then((response:AxiosResponse<ApiUserResponse<User>>)  => {
                 dispatch(toggleIsFetching(false));
                 let res = response.data;

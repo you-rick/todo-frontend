@@ -8,8 +8,8 @@ const axiosInstance = axios.create({
 
 
 export const profileAPI = {
-    login(creds) {
-        return axiosInstance.post(`auth/login`, creds);
+    login(...creds) {
+        return axiosInstance.post(`auth/login`, ...creds);
     },
     register(data) {
         return axiosInstance.post(`auth/register`, data);

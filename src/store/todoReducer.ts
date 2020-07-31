@@ -4,6 +4,7 @@ import {todoAPI} from "../api/api";
 import {reset} from "redux-form";
 import {ApiTodoResponse} from "../shared/interfaces/api-response.interface";
 import {AxiosResponse} from "axios";
+import {Todo, TodoStateInterface} from "../shared/interfaces/todo.interface";
 
 
 // Actions
@@ -11,21 +12,8 @@ const SET_TODOS = 'SET_TODOS';
 const SET_CURRENT_TODO = 'SET_CURRENT_TODO';
 const RESET_CURRENT_TODO = 'RESET_CURRENT_TODO';
 
-
 // Initial Data
-export type TodoType = {
-    _id: string | null,
-    title: string | null,
-    status: number,
-    author: string | null
-}
-
-export type InitialStateType = {
-    list: Array<TodoType>,
-    currentTodo: TodoType
-}
-
-let initialState:InitialStateType = {
+let initialState:TodoStateInterface = {
     list: [],
     currentTodo: {
         _id: null,
@@ -35,7 +23,7 @@ let initialState:InitialStateType = {
     }
 };
 
-const todoReducer = (state = initialState, action:any):InitialStateType => {
+const todoReducer = (state = initialState, action:any):TodoStateInterface => {
     switch (action.type) {
         case SET_TODOS:
             return {...state, list: action.todos};
@@ -51,22 +39,22 @@ const todoReducer = (state = initialState, action:any):InitialStateType => {
 // Action Creators Types
 type setTodosActionType = {
     type: typeof SET_TODOS,
-    todos: Array<TodoType>
+    todos: Array<Todo>
 }
 type setCurrentTodoActionType = {
     type: typeof SET_CURRENT_TODO,
-    data: TodoType
+    data: Todo
 }
 type resetCurrentTodoActionType = {
     type: typeof RESET_CURRENT_TODO
 }
 
 // Action Creators
-export const setTodos = (todos:Array<TodoType>):setTodosActionType => ({
+export const setTodos = (todos:Array<Todo>):setTodosActionType => ({
     type: SET_TODOS,
     todos
 });
-export const setCurrentTodo = (data:TodoType):setCurrentTodoActionType => ({
+export const setCurrentTodo = (data:Todo):setCurrentTodoActionType => ({
     type: SET_CURRENT_TODO,
     data
 });
@@ -80,7 +68,7 @@ export const resetCurrentTodo = ():resetCurrentTodoActionType => ({
 export const requestTodos = () => {
     return (dispatch:any) => {
         todoAPI.getTodos()
-            .then((response:AxiosResponse<ApiTodoResponse<TodoType>>) => {
+            .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
                 let res = response.data;
                 if (res.status) {
                     dispatch(setTodos(res.data));
@@ -89,11 +77,11 @@ export const requestTodos = () => {
     }
 };
 
-const handleTodo = (dispatch:any, data:TodoType | TodoType['_id'] , apiMethod:any) => {
+const handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
     dispatch(toggleIsFetching(true));
     dispatch(hideNote());
     apiMethod(data)
-        .then((response:AxiosResponse<ApiTodoResponse<TodoType>>) => {
+        .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
             let res = response.data;
             dispatch(toggleIsFetching(false));
             if (res.status) {
@@ -115,19 +103,19 @@ const handleTodo = (dispatch:any, data:TodoType | TodoType['_id'] , apiMethod:an
     });
 };
 
-export const postTodo = (data:TodoType) => {
+export const postTodo = (data:Todo) => {
     return (dispatch:any) => {
         handleTodo(dispatch, data, todoAPI.addTodo.bind(todoAPI));
     }
 };
 
-export const updateTodo = (data:TodoType) => {
+export const updateTodo = (data:Todo) => {
     return (dispatch:any) => {
         handleTodo(dispatch, data, todoAPI.updateTodo.bind(todoAPI));
     }
 };
 
-export const deleteTodo = (id:TodoType['_id']) => {
+export const deleteTodo = (id:Todo['_id']) => {
     return (dispatch:any) => {
         handleTodo(dispatch, id, todoAPI.deleteTodo.bind(todoAPI));
     }
