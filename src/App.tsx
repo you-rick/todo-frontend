@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, FC, ComponentType} from 'react';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {compose} from "redux";
 import {connect} from "react-redux";
@@ -12,8 +12,17 @@ import Todos from "./components/dashboard/Todos/Todos";
 import Login from "./components/auth/Login/Login";
 import Register from "./components/auth/Register/Register";
 import NotFound from "./components/public/NotFound/NotFound";
+import {RootStateInterface} from "./store/reducers";
+import {NotificationStateInterface} from "./shared/interfaces/notification.interface";
 
-const AppContainer = (props) => {
+type Props = {
+    initialized: boolean,
+    initializeApp: () => void,
+    hideNote: () => void,
+    notification: NotificationStateInterface,
+}
+
+const AppContainer:FC<Props> = (props) => {
     useEffect(() => {
         props.initializeApp();
     }, []);
@@ -45,12 +54,12 @@ const AppContainer = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootStateInterface) => ({
     notification: state.notification,
     initialized: state.app.initialized,
     isDataFetching: state.app.isDataFetching
 });
 
-const App = compose(withRouter, connect(mapStateToProps, {hideNote, initializeApp}))(AppContainer);
+const App = compose<ComponentType>(withRouter, connect(mapStateToProps, {hideNote, initializeApp}))(AppContainer);
 
 export default App;

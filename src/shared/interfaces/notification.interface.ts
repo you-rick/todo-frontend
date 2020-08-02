@@ -1,6 +1,6 @@
 export interface NotificationStateInterface {
     msg: any,
-    type: string,
+    type: 'error' | 'info' | 'success' | 'warning',
     error: boolean,
     success: boolean
 }

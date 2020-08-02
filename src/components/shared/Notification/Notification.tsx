@@ -52,4 +52,4 @@ const Notification: FC<NotificationType> = ({type, msg, hideNote}) => {
 };
 
 
-export default connect(null, {hideNote})(Notification);
+export default connect<NotificationType>(null, {hideNote})(Notification);

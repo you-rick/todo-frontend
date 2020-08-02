@@ -9,3 +9,8 @@ export interface TodoStateInterface {
     list: Array<Todo>,
     currentTodo: Todo
 }
+
+export interface FormTodoInterface {
+    title: string,
+    status: string
+}

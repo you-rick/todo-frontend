@@ -1,17 +1,32 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, FC, ChangeEvent} from 'react';
 import {Box, MenuItem, Button, Grid} from "@material-ui/core";
-import {Field, reduxForm} from "redux-form";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {renderTextField, renderSelectField} from "../../../shared/FormControls/FormControls";
 import {postTodo, updateTodo, resetCurrentTodo} from "../../../../store/todoReducer";
 import {connect} from "react-redux";
 import validate from "./validate";
 import s from "./TodosForm.module.scss";
 import {statusList} from "../statusList";
+import {Todo, TodoStateInterface, FormTodoInterface} from "../../../../shared/interfaces/todo.interface";
+import {RootStateInterface} from "../../../../store/reducers";
 
+interface Props {
+    currentTodo: Todo,
+    todos: TodoStateInterface['list'],
+    resetCurrentTodo: () => void
+}
 
-const TodosFormBox = (props) => {
+interface ExtendedProps extends Props {
+    authorId: Todo['_id']
+    updateTodo: (data: Todo) => void,
+    postTodo: (data: Todo) => void,
+}
+
+type FormProps = Props & InjectedFormProps<{}, Props>;
+
+const TodosFormBox: FC<FormProps> = (props) => {
     const {handleSubmit, currentTodo, resetCurrentTodo, todos} = props;
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState(0);
     const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
@@ -30,14 +45,14 @@ const TodosFormBox = (props) => {
         }
     }, [currentTodo]);
 
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
+    const handleStatusChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setStatus(parseInt(event.target.value));
     };
     const handleReset = () => {
         resetCurrentTodo();
         setStatus(currentTodo.status);
         setEditMode(false);
-        setStatus('');
+        setStatus(0);
         props.initialize({});
     };
 
@@ -84,10 +99,10 @@ const TodosFormBox = (props) => {
 };
 
 
-const TodoReduxForm = reduxForm({form: 'todos', validate})(TodosFormBox);
+const TodoReduxForm = reduxForm<{}, Props>({form: 'todos', validate})(TodosFormBox);
 
-const TodosForm = (props) => {
-    const onSubmit = (data) => {
+const TodosForm: FC<ExtendedProps> = (props) => {
+    const onSubmit = (data: any) => {
         data.author = props.authorId;
 
         if (props.currentTodo._id) {
@@ -105,7 +120,7 @@ const TodosForm = (props) => {
     />
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootStateInterface) => ({
     authorId: state.profile._id,
     currentTodo: state.todos.currentTodo,
     todos: state.todos.list
