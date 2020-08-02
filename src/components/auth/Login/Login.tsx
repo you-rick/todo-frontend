@@ -1,13 +1,16 @@
-import React from "react";
+import React, {FC} from "react";
 import {NavLink, Redirect} from "react-router-dom";
 import {Box, Container, Button, Grid, Link, Typography} from "@material-ui/core";
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import validate from "./validate";
 import {renderTextField} from "../../shared/FormControls/FormControls";
 import {connect} from "react-redux";
 import {login} from "../../../store/profileReducer";
+import {RootStateInterface} from "../../../store/reducers";
+import {LoginInterface} from "../../../shared/interfaces/login.interface";
 
-const LoginForm = (props) => {
+
+const LoginForm:FC<InjectedFormProps> = (props) => {
     const {handleSubmit} = props;
 
     return (
@@ -53,23 +56,20 @@ const LoginForm = (props) => {
     )
 };
 
-const LoginReduxForm = reduxForm({form: 'login', validate})(LoginForm);
+const LoginReduxForm = reduxForm<{}, {}>({form: 'login', validate})(LoginForm);
 
-
-const Login = (props) => {
-    const onSubmit = (data) => {
+const Login:FC<LoginInterface> = (props) => {
+    const onSubmit = (data:any) => {
         props.login(data);
     };
 
-    if (props.isAuth) {
-        return <Redirect to={"/"}/>
-    }
+    if (props.isAuth) {return <Redirect to={"/"}/>}
 
     return <LoginReduxForm onSubmit={onSubmit}/>;
 };
 
-const mapStateToProps = (state) => ({
-    isFetching: state.profile.isFetching,
+const mapStateToProps = (state:RootStateInterface) => ({
+    isFetching: state.app.isDataFetching,
     isAuth: state.profile.isAuth
 });
 

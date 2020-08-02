@@ -6,6 +6,7 @@ import {reset} from "redux-form";
 import {AxiosResponse} from "axios";
 import {ApiUserResponse} from "../shared/interfaces/api-response.interface";
 import {User, UserStateInterface} from "../shared/interfaces/user.interface";
+import {RegisterFormInterface} from "../shared/interfaces/register.interface";
 
 
 // Actions
@@ -68,7 +69,7 @@ export const getProfile = () => {
     }
 };
 
-export const register = (data:User) => {
+export const register = (data:RegisterFormInterface) => {
     return (dispatch:any) => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
@@ -90,12 +91,18 @@ export const register = (data:User) => {
     }
 };
 
-export const login = (email:string, password:string) => {
+
+type LoginFormProps = {
+    username: string,
+    password: string
+}
+
+export const login = (data:LoginFormProps) => {
     return (dispatch:any) => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
 
-        profileAPI.login(email, password)
+        profileAPI.login(data)
             .then((response:AxiosResponse<ApiUserResponse<User>>)  => {
                 dispatch(toggleIsFetching(false));
                 let res = response.data;

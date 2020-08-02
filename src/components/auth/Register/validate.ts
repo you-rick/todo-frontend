@@ -1,5 +1,8 @@
-const validate = values => {
-    const errors = {};
+import {RegisterFormInterface} from "../../../shared/interfaces/register.interface";
+import {FormErrors} from "redux-form";
+
+const validate = (values:RegisterFormInterface):FormErrors<RegisterFormInterface> => {
+    const errors:FormErrors<RegisterFormInterface> = {};
     if (!values.username) {
         errors.username = 'Required field'
     }

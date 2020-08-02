@@ -1,18 +1,21 @@
-import React from "react";
+import React, {FC} from "react";
 import {NavLink, Redirect} from "react-router-dom";
 import {createTextMask} from "redux-form-input-masks";
 import {Box, Container, Button, Grid, Link, Typography} from "@material-ui/core";
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import validate from "./validate";
 import {renderTextField} from "../../shared/FormControls/FormControls";
 import {connect} from "react-redux";
 import {register} from "../../../store/profileReducer";
+import {User} from "../../../shared/interfaces/user.interface";
+import {RegisterInterface} from "../../../shared/interfaces/register.interface";
+import {RootStateInterface} from "../../../store/reducers";
 
-const phoneMask = createTextMask({
+const phoneMask:any = createTextMask({
     pattern: '(999) 999-9999',
 });
 
-const RegisterForm = (props) => {
+const RegisterForm:FC<InjectedFormProps> = (props) => {
     const {handleSubmit} = props;
 
     return (
@@ -70,9 +73,9 @@ const RegisterForm = (props) => {
                         variant="outlined"
                         margin="normal"
                         type="tel"
-                        {...phoneMask}
                         fullWidth={true}
                         component={renderTextField}
+                        {...phoneMask}
                     />
                     <Field
                         name="address"
@@ -101,11 +104,11 @@ const RegisterForm = (props) => {
     )
 };
 
-const RegisterReduxForm = reduxForm({form: 'register', validate})(RegisterForm);
+const RegisterReduxForm = reduxForm<{}, {}>({form: 'register', validate})(RegisterForm);
 
 
-const Register = (props) => {
-    const onSubmit = (data) => {
+const Register:FC<RegisterInterface> = (props) => {
+    const onSubmit = (data:any) => {
         props.register(data);
     };
 
@@ -116,8 +119,7 @@ const Register = (props) => {
     return <RegisterReduxForm onSubmit={onSubmit}/>;
 };
 
-const mapStateToProps = (state) => ({
-    isFetching: state.profile.isFetching,
+const mapStateToProps = (state:RootStateInterface) => ({
     isAuth: state.profile.isAuth
 });
 
