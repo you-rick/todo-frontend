@@ -1,5 +1,8 @@
-import * as axios from 'axios';
+import axios from 'axios';
 import {authHeader} from "../utils/helpers/auth-helpers";
+import {Todo} from "../shared/interfaces/todo.interface";
+import {LoginFormInterface} from "../shared/interfaces/login.interface";
+import {RegisterFormInterface} from "../shared/interfaces/register.interface";
 
 
 const axiosInstance = axios.create({
@@ -8,11 +11,11 @@ const axiosInstance = axios.create({
 
 
 export const profileAPI = {
-    login(creds) {
+    login(creds:LoginFormInterface) {
         console.log(creds);
         return axiosInstance.post(`auth/login`, creds);
     },
-    register(data) {
+    register(data:RegisterFormInterface) {
         return axiosInstance.post(`auth/register`, data);
     },
     me() {
@@ -24,13 +27,13 @@ export const todoAPI = {
     getTodos() {
         return axiosInstance.get(`todos`, {headers: authHeader()});
     },
-    addTodo(data) {
+    addTodo(data:Todo) {
         return axiosInstance.post(`todos`, data, {headers: authHeader()});
     },
-    updateTodo(data) {
+    updateTodo(data:Todo) {
         return axiosInstance.put(`todos/${data._id}`, data, {headers: authHeader()});
     },
-    deleteTodo(id) {
+    deleteTodo(id:Todo['_id']) {
         return axiosInstance.delete(`todos/${id}`, {headers: authHeader()});
     }
 
