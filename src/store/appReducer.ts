@@ -13,7 +13,7 @@ let initialState: AppStateInterface = {
 };
 
 
-const appReducer = (state = initialState, action:any):AppStateInterface => {
+const appReducer = (state = initialState, action:AppActionTypes):AppStateInterface => {
     switch (action.type) {
         case INITIALIZED_SUCCESS:
             return {
@@ -29,20 +29,22 @@ const appReducer = (state = initialState, action:any):AppStateInterface => {
 };
 
 // Action Creators Types
-type toggleIsFetchingActionType = {
+interface ToggleIsFetchingAction {
     type: typeof TOGGLE_IS_FETCHING,
     isDataFetching:boolean
 }
-type initializedSuccessActionType = {
+interface InitializedSuccessAction {
     type: typeof INITIALIZED_SUCCESS
 }
 
+export type AppActionTypes = ToggleIsFetchingAction | InitializedSuccessAction;
+
 // Action Creators
-export const toggleIsFetching = (isDataFetching:boolean):toggleIsFetchingActionType => ({
+export const toggleIsFetching = (isDataFetching:boolean):ToggleIsFetchingAction => ({
     type: TOGGLE_IS_FETCHING,
     isDataFetching
 });
-export const initializedSuccess = ():initializedSuccessActionType => ({
+export const initializedSuccess = ():InitializedSuccessAction => ({
     type: INITIALIZED_SUCCESS
 });
 

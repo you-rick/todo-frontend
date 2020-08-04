@@ -25,7 +25,7 @@ let initialState:UserStateInterface = {
     isAuth: false
 };
 
-const profileReducer = (state = initialState, action: any):UserStateInterface => {
+const profileReducer = (state = initialState, action: ProfileActionTypes):UserStateInterface => {
     switch (action.type) {
         case SET_PROFILE_DATA:
             return {...state, ...action.data};
@@ -37,21 +37,23 @@ const profileReducer = (state = initialState, action: any):UserStateInterface =>
 };
 
 // Action Creators Types
-type setProfileDataActionType = {
+interface SetProfileDataAction {
     type: typeof SET_PROFILE_DATA,
     data: User
 }
-type setAuthStatusActionType = {
+interface SetAuthStatusAction {
     type: typeof SET_AUTH_STATUS,
     isAuth: boolean
 }
 
+export type ProfileActionTypes = SetAuthStatusAction | SetProfileDataAction;
+
 // Action Creators
-export const setProfileData = (data:User):setProfileDataActionType => ({
+export const setProfileData = (data:User):SetProfileDataAction => ({
     type: SET_PROFILE_DATA,
     data
 });
-export const setAuthStatus = (isAuth:boolean):setAuthStatusActionType => ({
+export const setAuthStatus = (isAuth:boolean):SetAuthStatusAction => ({
     type: SET_AUTH_STATUS, isAuth
 });
 

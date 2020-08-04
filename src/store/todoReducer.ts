@@ -23,7 +23,7 @@ let initialState:TodoStateInterface = {
     }
 };
 
-const todoReducer = (state = initialState, action:any):TodoStateInterface => {
+const todoReducer = (state = initialState, action:TodoActionTypes):TodoStateInterface => {
     switch (action.type) {
         case SET_TODOS:
             return {...state, list: action.todos};
@@ -37,28 +37,30 @@ const todoReducer = (state = initialState, action:any):TodoStateInterface => {
 };
 
 // Action Creators Types
-type setTodosActionType = {
+interface SetTodosAction {
     type: typeof SET_TODOS,
     todos: Array<Todo>
 }
-type setCurrentTodoActionType = {
+interface SetCurrentTodoAction {
     type: typeof SET_CURRENT_TODO,
     data: Todo
 }
-type resetCurrentTodoActionType = {
+interface ResetCurrentTodoAction {
     type: typeof RESET_CURRENT_TODO
 }
 
+export type TodoActionTypes = SetTodosAction | SetCurrentTodoAction | ResetCurrentTodoAction;
+
 // Action Creators
-export const setTodos = (todos:Array<Todo>):setTodosActionType => ({
+export const setTodos = (todos:Array<Todo>):SetTodosAction => ({
     type: SET_TODOS,
     todos
 });
-export const setCurrentTodo = (data:Todo):setCurrentTodoActionType => ({
+export const setCurrentTodo = (data:Todo):SetCurrentTodoAction => ({
     type: SET_CURRENT_TODO,
     data
 });
-export const resetCurrentTodo = ():resetCurrentTodoActionType => ({
+export const resetCurrentTodo = ():ResetCurrentTodoAction => ({
     type: RESET_CURRENT_TODO
 });
 

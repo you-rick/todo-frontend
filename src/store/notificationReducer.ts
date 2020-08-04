@@ -12,7 +12,7 @@ const initState: NotificationStateInterface = {
     success: false
 };
 
-const notificationReducer = (state = initState, action: any):NotificationStateInterface => {
+const notificationReducer = (state = initState, action: NotificationActionTypes):NotificationStateInterface => {
     switch (action.type) {
         case SET_NOTE:
             return {...state, ...action.body};
@@ -25,21 +25,23 @@ const notificationReducer = (state = initState, action: any):NotificationStateIn
 
 
 // Action Creators Types
-type setNoteActionType = {
+interface SetNoteAction {
     type: typeof SET_NOTE,
     body: NotificationStateInterface
 }
-type hideNoteActionType = {
+interface HideNoteAction {
     type: typeof HIDE_NOTE
 }
 
+export type NotificationActionTypes = SetNoteAction | HideNoteAction;
+
 
 // Action Creators
-export const setNote = (body:NotificationStateInterface):setNoteActionType => ({
+export const setNote = (body:NotificationStateInterface):SetNoteAction => ({
     type: SET_NOTE,
     body: body
 });
-export const hideNote = ():hideNoteActionType => ({
+export const hideNote = ():HideNoteAction => ({
     type: HIDE_NOTE
 });
 
