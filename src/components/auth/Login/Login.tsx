@@ -4,10 +4,9 @@ import {Box, Container, Button, Grid, Link, Typography} from "@material-ui/core"
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import validate from "./validate";
 import {renderTextField} from "../../shared/FormControls/FormControls";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {login} from "../../../store/profileReducer";
-import {RootStateInterface} from "../../../store/reducers";
-import {LoginInterface} from "../../../shared/interfaces/login.interface";
+import {RootStateInterface} from "../../../shared/interfaces/root-state.intefrace";
 
 
 const LoginForm:FC<InjectedFormProps> = (props) => {
@@ -58,7 +57,12 @@ const LoginForm:FC<InjectedFormProps> = (props) => {
 
 const LoginReduxForm = reduxForm<{}, {}>({form: 'login', validate})(LoginForm);
 
-const Login:FC<LoginInterface> = (props) => {
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & {}
+
+// HOC
+const Login:FC<Props> = (props) => {
     const onSubmit = (data:any) => {
         props.login(data);
     };
@@ -68,10 +72,14 @@ const Login:FC<LoginInterface> = (props) => {
     return <LoginReduxForm onSubmit={onSubmit}/>;
 };
 
+// React-Redux settings
 const mapStateToProps = (state:RootStateInterface) => ({
     isFetching: state.app.isDataFetching,
     isAuth: state.profile.isAuth
 });
+const mapDispatchToProps = {login};
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
 
 export default connect(mapStateToProps, {login})(Login);
 

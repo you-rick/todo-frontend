@@ -7,6 +7,8 @@ import {AxiosResponse} from "axios";
 import {ApiUserResponse} from "../shared/interfaces/api-response.interface";
 import {User, UserStateInterface} from "../shared/interfaces/user.interface";
 import {RegisterFormInterface} from "../shared/interfaces/register.interface";
+import {AppThunk} from "../shared/interfaces/app-thunk.interface";
+import {LoginFormInterface} from "../shared/interfaces/login.interface";
 
 
 // Actions
@@ -25,7 +27,7 @@ let initialState:UserStateInterface = {
     isAuth: false
 };
 
-const profileReducer = (state = initialState, action: ProfileActionTypes):UserStateInterface => {
+const profileReducer = (state = initialState, action:ProfileActionTypes):UserStateInterface => {
     switch (action.type) {
         case SET_PROFILE_DATA:
             return {...state, ...action.data};
@@ -58,8 +60,8 @@ export const setAuthStatus = (isAuth:boolean):SetAuthStatusAction => ({
 });
 
 // Thunks
-export const getProfile = () => {
-    return (dispatch:any) => {
+export const getProfile = ():AppThunk => {
+    return dispatch => {
         profileAPI.me()
             .then((response:AxiosResponse<ApiUserResponse<User>>) => {
                 let res = response.data;
@@ -71,8 +73,8 @@ export const getProfile = () => {
     }
 };
 
-export const register = (data:RegisterFormInterface) => {
-    return (dispatch:any) => {
+export const register = (data:RegisterFormInterface):AppThunk => {
+    return dispatch => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
         profileAPI.register(data)
@@ -93,14 +95,8 @@ export const register = (data:RegisterFormInterface) => {
     }
 };
 
-
-type LoginFormProps = {
-    username: string,
-    password: string
-}
-
-export const login = (data:LoginFormProps) => {
-    return (dispatch:any) => {
+export const login = (data:LoginFormInterface):AppThunk => {
+    return dispatch => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
 
@@ -124,9 +120,8 @@ export const login = (data:LoginFormProps) => {
     }
 };
 
-
-export const logout = () => {
-    return (dispatch:any) => {
+export const logout = ():AppThunk => {
+    return dispatch => {
         dispatch(setAuthStatus(false));
         dispatch(setProfileData(initialState));
         localStorage.removeItem('token');

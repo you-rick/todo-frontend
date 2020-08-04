@@ -3,27 +3,24 @@ import {Box, MenuItem, Button, Grid} from "@material-ui/core";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {renderTextField, renderSelectField} from "../../../shared/FormControls/FormControls";
 import {postTodo, updateTodo, resetCurrentTodo} from "../../../../store/todoReducer";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import validate from "./validate";
 import s from "./TodosForm.module.scss";
 import {statusList} from "../statusList";
 import {Todo, TodoStateInterface, FormTodoInterface} from "../../../../shared/interfaces/todo.interface";
-import {RootStateInterface} from "../../../../store/reducers";
+import {RootStateInterface} from "../../../../shared/interfaces/root-state.intefrace";
 
+// Types
 interface Props {
     currentTodo: Todo,
     todos: TodoStateInterface['list'],
     resetCurrentTodo: () => void
 }
 
-interface ExtendedProps extends Props {
-    authorId: Todo['_id']
-    updateTodo: (data: Todo) => void,
-    postTodo: (data: Todo) => void,
-}
-
 type FormProps = Props & InjectedFormProps<{}, Props>;
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
+// Component
 const TodosFormBox: FC<FormProps> = (props) => {
     const {handleSubmit, currentTodo, resetCurrentTodo, todos} = props;
     const [status, setStatus] = useState(0);
@@ -98,10 +95,10 @@ const TodosFormBox: FC<FormProps> = (props) => {
     )
 };
 
-
 const TodoReduxForm = reduxForm<{}, Props>({form: 'todos', validate})(TodosFormBox);
 
-const TodosForm: FC<ExtendedProps> = (props) => {
+// HOC
+const TodosForm: FC<PropsFromRedux> = (props) => {
     const onSubmit = (data: any) => {
         data.author = props.authorId;
 
@@ -120,11 +117,14 @@ const TodosForm: FC<ExtendedProps> = (props) => {
     />
 };
 
+// React-Redux settings
 const mapStateToProps = (state: RootStateInterface) => ({
     authorId: state.profile._id,
     currentTodo: state.todos.currentTodo,
     todos: state.todos.list
 });
+const mapDispatchToProps = {postTodo, updateTodo, resetCurrentTodo};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 
-export default connect(mapStateToProps, {postTodo, updateTodo, resetCurrentTodo})(TodosForm);
+export default connector(TodosForm);

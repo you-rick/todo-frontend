@@ -5,6 +5,7 @@ import {reset} from "redux-form";
 import {ApiTodoResponse} from "../shared/interfaces/api-response.interface";
 import {AxiosResponse} from "axios";
 import {Todo, TodoStateInterface} from "../shared/interfaces/todo.interface";
+import {AppThunk} from "../shared/interfaces/app-thunk.interface";
 
 
 // Actions
@@ -67,7 +68,7 @@ export const resetCurrentTodo = ():ResetCurrentTodoAction => ({
 
 
 // Thunks
-export const requestTodos = () => {
+export const requestTodos = ():AppThunk => {
     return (dispatch:any) => {
         todoAPI.getTodos()
             .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
@@ -79,7 +80,7 @@ export const requestTodos = () => {
     }
 };
 
-const handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
+const _handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
     dispatch(toggleIsFetching(true));
     dispatch(hideNote());
     apiMethod(data)
@@ -105,21 +106,21 @@ const handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
     });
 };
 
-export const postTodo = (data:Todo) => {
+export const postTodo = (data:Todo):AppThunk => {
     return (dispatch:any) => {
-        handleTodo(dispatch, data, todoAPI.addTodo.bind(todoAPI));
+        _handleTodo(dispatch, data, todoAPI.addTodo.bind(todoAPI));
     }
 };
 
-export const updateTodo = (data:Todo) => {
+export const updateTodo = (data:Todo):AppThunk => {
     return (dispatch:any) => {
-        handleTodo(dispatch, data, todoAPI.updateTodo.bind(todoAPI));
+        _handleTodo(dispatch, data, todoAPI.updateTodo.bind(todoAPI));
     }
 };
 
-export const deleteTodo = (id:Todo['_id']) => {
+export const deleteTodo = (id:Todo['_id']):AppThunk => {
     return (dispatch:any) => {
-        handleTodo(dispatch, id, todoAPI.deleteTodo.bind(todoAPI));
+        _handleTodo(dispatch, id, todoAPI.deleteTodo.bind(todoAPI));
     }
 };
 

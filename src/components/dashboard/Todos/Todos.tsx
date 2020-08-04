@@ -1,28 +1,24 @@
 import React, {useEffect, FC} from 'react';
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {Redirect} from 'react-router-dom';
 import {Box, Container, Typography} from "@material-ui/core";
 import TodosForm from "./TodosForm/TodosForm";
 import Todo from "./Todo/Todo";
 import {requestTodos} from "../../../store/todoReducer";
-import {TodoStateInterface} from "../../../shared/interfaces/todo.interface";
-import {RootStateInterface} from "../../../store/reducers";
+import {RootStateInterface} from "../../../shared/interfaces/root-state.intefrace";
 
-type Props = {
-    isAuth: boolean,
-    requestTodos: () => void,
-    name: string | null,
-    todos: TodoStateInterface['list']
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & {}
 
-}
-
+// Component
 const Todos:FC<Props> = (props) => {
     useEffect(() => {
         props.isAuth && props.requestTodos();
     }, [props.isAuth]);
 
 
-    if (!props.isAuth) {
+    if (!localStorage.getItem('token')) {
         return <Redirect to='/login'/>
     }
 
@@ -42,10 +38,14 @@ const Todos:FC<Props> = (props) => {
     )
 };
 
+// React-Redux settings
 const mapStateToProps = (state:RootStateInterface) => ({
     isAuth: state.profile.isAuth,
     name: state.profile.name,
     todos: state.todos.list
 });
+const mapDispatchToProps = {requestTodos};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-export default connect(mapStateToProps, {requestTodos})(Todos);
+
+export default connector(Todos);

@@ -1,22 +1,23 @@
 import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Link, Container, Grid} from "@material-ui/core";
 import {NavLink} from "react-router-dom";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {logout} from "../../../store/profileReducer";
-import {RootStateInterface} from "../../../store/reducers";
+import {RootStateInterface} from "../../../shared/interfaces/root-state.intefrace";
 
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & {}
+
+// Material UI styling
 const useStyles = makeStyles(() => ({
     link: {
         marginLeft: '20px',
     },
 }));
 
-type Props = {
-    logout: () => void,
-    isAuth: boolean
-}
-
+// Component
 const Header: FC<Props> = ({logout, isAuth}) => {
     const classes = useStyles();
     const logoutHandler = () => {
@@ -47,7 +48,14 @@ const Header: FC<Props> = ({logout, isAuth}) => {
     )
 };
 
+
+// React-Redux settings
 const mapStateToProps = (state:RootStateInterface) => ({
     isAuth: state.profile.isAuth
 });
-export default connect(mapStateToProps, {logout})(Header);
+const mapDispatchToProps = {
+    logout: logout
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+export default connector(Header);

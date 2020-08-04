@@ -1,17 +1,9 @@
 import React, {FC} from 'react';
 import "./FormControls.scss";
 import {TextField} from "@material-ui/core";
-import {WrappedFieldMetaProps} from "redux-form";
+import {FormControlPropsType} from "../../../shared/interfaces/form-controls.interface";
 
-
-type FormControlPropsType = {
-    label: string,
-    input: string,
-    meta: WrappedFieldMetaProps
-}
-
-
-export const renderTextField:FC<FormControlPropsType> = ({label, input, meta: {touched, invalid, error}, ...custom}) => (
+export const renderTextField: FC<FormControlPropsType> = ({label, input, meta: {touched, invalid, error}, ...custom}) => (
     <TextField
         label={label}
         placeholder={label}
@@ -22,8 +14,7 @@ export const renderTextField:FC<FormControlPropsType> = ({label, input, meta: {t
     />
 );
 
-
-export const renderSelectField:FC<FormControlPropsType> = ({label, input, meta: {touched, invalid, error}, children, ...custom}) => (
+export const renderSelectField: FC<FormControlPropsType> = ({label, input, meta: {touched, invalid, error}, children, ...custom}) => (
     <TextField select
                label={label}
                placeholder={label}

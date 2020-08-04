@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {Grid, Typography, IconButton} from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -8,22 +8,19 @@ import {statusList} from "../statusList";
 import {deleteTodo, setCurrentTodo} from "../../../../store/todoReducer";
 import {Todo as TodoInterface} from "../../../../shared/interfaces/todo.interface";
 
-type DispatchPropsType = {
-    deleteTodo: (_id: string | null) => void,
-    setCurrentTodo: (data: TodoInterface) => void
-}
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & TodoInterface;
 
-type Props = DispatchPropsType & TodoInterface;
-
-
+// Component
 const Todo:FC<Props> = (props) => {
     const status = statusList.filter(el => el.id === props.status);
 
-    const handleDelete = () => {
+    const handleDelete = ():void => {
         props.deleteTodo(props._id);
     };
 
-    const handleEdit = () => {
+    const handleEdit = ():void => {
       props.setCurrentTodo(props);
       window.scrollTo(0, 0);
     };
@@ -44,4 +41,7 @@ const Todo:FC<Props> = (props) => {
     )
 };
 
-export default connect(null, {deleteTodo, setCurrentTodo})(Todo);
+// React-Redux settings
+const connector = connect(null, {deleteTodo, setCurrentTodo});
+
+export default connector(Todo);

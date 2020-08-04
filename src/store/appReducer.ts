@@ -1,5 +1,6 @@
 import {getProfile} from "./profileReducer";
 import {AppStateInterface} from "../shared/interfaces/app.interface";
+import {AppThunk} from "../shared/interfaces/app-thunk.interface";
 
 // Actions
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
@@ -50,8 +51,8 @@ export const initializedSuccess = ():InitializedSuccessAction => ({
 
 
 // Thunks
-export const initializeApp = () => {
-    return (dispatch:any) => {
+export const initializeApp = ():AppThunk => {
+    return dispatch => {
         let promiseArray = [];
         localStorage.getItem('token') && promiseArray.push(dispatch(getProfile()));
         dispatch(toggleIsFetching(true));

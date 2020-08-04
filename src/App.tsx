@@ -1,7 +1,7 @@
 import React, {useEffect, FC, ComponentType} from 'react';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {compose} from "redux";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {hideNote} from "./store/notificationReducer";
 import {initializeApp} from "./store/appReducer";
 import Preloader from "./components/shared/Preloader/Preloader";
@@ -12,16 +12,13 @@ import Todos from "./components/dashboard/Todos/Todos";
 import Login from "./components/auth/Login/Login";
 import Register from "./components/auth/Register/Register";
 import NotFound from "./components/public/NotFound/NotFound";
-import {RootStateInterface} from "./store/reducers";
-import {NotificationStateInterface} from "./shared/interfaces/notification.interface";
+import {RootStateInterface} from "./shared/interfaces/root-state.intefrace";
 
-type Props = {
-    initialized: boolean,
-    initializeApp: () => void,
-    hideNote: () => void,
-    notification: NotificationStateInterface,
-}
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & {}
 
+// Component
 const AppContainer:FC<Props> = (props) => {
     useEffect(() => {
         props.initializeApp();
@@ -54,12 +51,19 @@ const AppContainer:FC<Props> = (props) => {
     );
 };
 
+// React-Redux settings
 const mapStateToProps = (state: RootStateInterface) => ({
     notification: state.notification,
     initialized: state.app.initialized,
     isDataFetching: state.app.isDataFetching
 });
 
-const App = compose<ComponentType>(withRouter, connect(mapStateToProps, {hideNote, initializeApp}))(AppContainer);
+const mapDispatchToProps = {
+    hideNote: hideNote,
+    initializeApp: initializeApp
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+const App = compose<ComponentType>(withRouter, connector)(AppContainer);
 
 export default App;

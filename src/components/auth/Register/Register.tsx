@@ -5,11 +5,9 @@ import {Box, Container, Button, Grid, Link, Typography} from "@material-ui/core"
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import validate from "./validate";
 import {renderTextField} from "../../shared/FormControls/FormControls";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {register} from "../../../store/profileReducer";
-import {User} from "../../../shared/interfaces/user.interface";
-import {RegisterInterface} from "../../../shared/interfaces/register.interface";
-import {RootStateInterface} from "../../../store/reducers";
+import {RootStateInterface} from "../../../shared/interfaces/root-state.intefrace";
 
 const phoneMask:any = createTextMask({
     pattern: '(999) 999-9999',
@@ -106,8 +104,13 @@ const RegisterForm:FC<InjectedFormProps> = (props) => {
 
 const RegisterReduxForm = reduxForm<{}, {}>({form: 'register', validate})(RegisterForm);
 
+// Types
+type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = PropsFromRedux & {}
 
-const Register:FC<RegisterInterface> = (props) => {
+
+// HOC
+const Register:FC<Props> = (props) => {
     const onSubmit = (data:any) => {
         props.register(data);
     };
@@ -119,10 +122,15 @@ const Register:FC<RegisterInterface> = (props) => {
     return <RegisterReduxForm onSubmit={onSubmit}/>;
 };
 
+
+// React-Redux settings
 const mapStateToProps = (state:RootStateInterface) => ({
     isAuth: state.profile.isAuth
 });
+const mapDispatchToProps = {register};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-export default connect(mapStateToProps, {register})(Register);
+
+export default connector(Register);
 
 
