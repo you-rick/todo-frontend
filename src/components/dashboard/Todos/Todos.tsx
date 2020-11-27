@@ -6,6 +6,9 @@ import TodosForm from "./TodosForm/TodosForm";
 import Todo from "./Todo/Todo";
 import {requestTodos} from "../../../store/todoReducer";
 import {RootStateInterface} from "../../../shared/interfaces/root-state.intefrace";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 // Types
 type PropsFromRedux = ConnectedProps<typeof connector>
@@ -18,7 +21,7 @@ const Todos:FC<Props> = (props) => {
     }, [props.isAuth]);
 
 
-    if (!localStorage.getItem('token')) {
+    if (!cookies.get('token')) {
         return <Redirect to='/login'/>
     }
 

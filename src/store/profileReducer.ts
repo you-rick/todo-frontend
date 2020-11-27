@@ -17,7 +17,7 @@ const SET_AUTH_STATUS = 'SET_AUTH_STATUS';
 
 
 // Initial Data
-let initialState:UserStateInterface = {
+let initialState: UserStateInterface = {
     _id: null,
     name: null,
     username: null,
@@ -27,7 +27,7 @@ let initialState:UserStateInterface = {
     isAuth: false
 };
 
-const profileReducer = (state = initialState, action:ProfileActionTypes):UserStateInterface => {
+const profileReducer = (state = initialState, action: ProfileActionTypes): UserStateInterface => {
     switch (action.type) {
         case SET_PROFILE_DATA:
             return {...state, ...action.data};
@@ -43,6 +43,7 @@ interface SetProfileDataAction {
     type: typeof SET_PROFILE_DATA,
     data: User
 }
+
 interface SetAuthStatusAction {
     type: typeof SET_AUTH_STATUS,
     isAuth: boolean
@@ -51,19 +52,19 @@ interface SetAuthStatusAction {
 export type ProfileActionTypes = SetAuthStatusAction | SetProfileDataAction;
 
 // Action Creators
-export const setProfileData = (data:User):SetProfileDataAction => ({
+export const setProfileData = (data: User): SetProfileDataAction => ({
     type: SET_PROFILE_DATA,
     data
 });
-export const setAuthStatus = (isAuth:boolean):SetAuthStatusAction => ({
+export const setAuthStatus = (isAuth: boolean): SetAuthStatusAction => ({
     type: SET_AUTH_STATUS, isAuth
 });
 
 // Thunks
-export const getProfile = ():AppThunk => {
+export const getProfile = (): AppThunk => {
     return dispatch => {
         profileAPI.me()
-            .then((response:AxiosResponse<ApiUserResponse<User>>) => {
+            .then((response: AxiosResponse<ApiUserResponse<User>>) => {
                 let res = response.data;
                 if (res.status) {
                     dispatch(setProfileData(res.data));
@@ -73,12 +74,12 @@ export const getProfile = ():AppThunk => {
     }
 };
 
-export const register = (data:RegisterFormInterface):AppThunk => {
+export const register = (data: RegisterFormInterface): AppThunk => {
     return dispatch => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
         profileAPI.register(data)
-            .then((response:AxiosResponse<ApiUserResponse<User>>) => {
+            .then((response: AxiosResponse<ApiUserResponse<User>>) => {
                 let res = response.data;
                 dispatch(toggleIsFetching(false));
                 if (res.status) {
@@ -88,44 +89,59 @@ export const register = (data:RegisterFormInterface):AppThunk => {
                 } else {
                     dispatch(setNote({msg: res.message, type: "error", error: true, success: false}));
                 }
-            }).catch((error:any) => {
+            }).catch((error: any) => {
             dispatch(toggleIsFetching(false));
             dispatch(setNote({msg: error.response.data.message, type: "error", error: true, success: false}));
         });
     }
 };
 
-export const login = (data:LoginFormInterface):AppThunk => {
+export const login = (data: LoginFormInterface): AppThunk => {
     return dispatch => {
         dispatch(toggleIsFetching(true));
         dispatch(hideNote());
 
         profileAPI.login(data)
-            .then((response:AxiosResponse<ApiUserResponse<User>>)  => {
+            .then((response: AxiosResponse<ApiUserResponse<User>>) => {
                 dispatch(toggleIsFetching(false));
                 let res = response.data;
                 if (res.status) {
-                    res.token && localStorage.setItem('token', res.token);
                     setTimeout(() => {
                         dispatch(getProfile());
                         dispatch(push('/'));
                     }, 100);
                 }
-            }).catch((error:any) => {
-            console.log(error.response);
+            }).catch((error: any) => {
             dispatch(toggleIsFetching(false));
-            dispatch(setNote({msg: error.response.data.message, type: "error", error: true, success: false}));
+            dispatch(setNote({
+                msg: error.response?.data.message || 'Error',
+                type: "error",
+                error: true,
+                success: false
+            }));
 
         });
     }
 };
 
-export const logout = ():AppThunk => {
+export const logout = (): AppThunk => {
     return dispatch => {
-        dispatch(setAuthStatus(false));
-        dispatch(setProfileData(initialState));
-        localStorage.removeItem('token');
-        dispatch(push('/login'));
+        dispatch(toggleIsFetching(true));
+        dispatch(hideNote());
+        profileAPI.logout()
+            .then((response: AxiosResponse<any>) => {
+                dispatch(setAuthStatus(false));
+                dispatch(setProfileData(initialState));
+                dispatch(push('/login'));
+            }).catch((error: any) => {
+            dispatch(toggleIsFetching(false));
+            dispatch(setNote({
+                msg: error.response?.data.message || 'Error',
+                type: "error",
+                error: true,
+                success: false
+            }));
+        });
     }
 };
 

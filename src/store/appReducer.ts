@@ -1,6 +1,9 @@
+import Cookies from "universal-cookie";
 import {getProfile} from "./profileReducer";
 import {AppStateInterface} from "../shared/interfaces/app.interface";
 import {AppThunk} from "../shared/interfaces/app-thunk.interface";
+
+const cookies = new Cookies();
 
 // Actions
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
@@ -54,7 +57,7 @@ export const initializedSuccess = ():InitializedSuccessAction => ({
 export const initializeApp = ():AppThunk => {
     return dispatch => {
         let promiseArray = [];
-        localStorage.getItem('token') && promiseArray.push(dispatch(getProfile()));
+        cookies.get('token') && promiseArray.push(dispatch(getProfile()));
         dispatch(toggleIsFetching(true));
 
         Promise.all(promiseArray).then(() => {
