@@ -1,23 +1,19 @@
-import Cookies from "universal-cookie";
-import {getProfile} from "./profileReducer";
 import {AppStateInterface} from "../shared/interfaces/app.interface";
-import {AppThunk} from "../shared/interfaces/app-thunk.interface";
-
-const cookies = new Cookies();
 
 // Actions
-const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
-const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
+export const INITIALIZE_APP = 'INITIALIZE_APP';
+export const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
+export const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
 
 
 // Initial Data
-let initialState: AppStateInterface = {
+const initialState: AppStateInterface = {
     initialized: false,
     isDataFetching: false
 };
 
 
-const appReducer = (state = initialState, action:AppActionTypes):AppStateInterface => {
+const appReducer = (state = initialState, action: AppActionTypes): AppStateInterface => {
     switch (action.type) {
         case INITIALIZED_SUCCESS:
             return {
@@ -35,39 +31,29 @@ const appReducer = (state = initialState, action:AppActionTypes):AppStateInterfa
 // Action Creators Types
 interface ToggleIsFetchingAction {
     type: typeof TOGGLE_IS_FETCHING,
-    isDataFetching:boolean
+    isDataFetching: boolean
 }
 interface InitializedSuccessAction {
     type: typeof INITIALIZED_SUCCESS
 }
+interface initializeAppAction {
+    type: typeof INITIALIZE_APP
+}
 
-export type AppActionTypes = ToggleIsFetchingAction | InitializedSuccessAction;
+export type AppActionTypes = ToggleIsFetchingAction | InitializedSuccessAction | initializeAppAction;
+
 
 // Action Creators
-export const toggleIsFetching = (isDataFetching:boolean):ToggleIsFetchingAction => ({
+export const toggleIsFetching = (isDataFetching: boolean): ToggleIsFetchingAction => ({
     type: TOGGLE_IS_FETCHING,
     isDataFetching
 });
-export const initializedSuccess = ():InitializedSuccessAction => ({
+export const initializedSuccess = (): InitializedSuccessAction => ({
     type: INITIALIZED_SUCCESS
 });
-
-
-// Thunks
-export const initializeApp = ():AppThunk => {
-    return dispatch => {
-        let promiseArray = [];
-        cookies.get('token') && promiseArray.push(dispatch(getProfile()));
-        dispatch(toggleIsFetching(true));
-
-        Promise.all(promiseArray).then(() => {
-            setTimeout(() => {
-                dispatch(toggleIsFetching(false));
-                dispatch(initializedSuccess());
-            }, 500);
-        });
-    }
-};
+export const initializeApp = (): initializeAppAction => ({
+    type: INITIALIZE_APP
+});
 
 
 export default appReducer;

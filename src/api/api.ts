@@ -3,8 +3,7 @@ import {Todo} from "../shared/interfaces/todo.interface";
 import {LoginFormInterface} from "../shared/interfaces/login.interface";
 import {RegisterFormInterface} from "../shared/interfaces/register.interface";
 
-
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL,
     withCredentials: true,
 });
@@ -12,7 +11,6 @@ const axiosInstance = axios.create({
 
 export const profileAPI = {
     login(creds: LoginFormInterface) {
-        console.log(creds);
         return axiosInstance.post(`auth/login`, creds);
     },
     logout() {
@@ -40,4 +38,4 @@ export const todoAPI = {
         return axiosInstance.delete(`todos/${id}`);
     }
 
-}
+};

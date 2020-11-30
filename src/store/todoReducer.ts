@@ -1,5 +1,4 @@
-import {toggleIsFetching} from "./appReducer";
-import {hideNote, setNote} from "./notificationReducer";
+import {setNote} from "./notificationReducer";
 import {todoAPI} from "../api/api";
 import {reset} from "redux-form";
 import {ApiTodoResponse} from "../shared/interfaces/api-response.interface";
@@ -81,12 +80,9 @@ export const requestTodos = ():AppThunk => {
 };
 
 const _handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
-    dispatch(toggleIsFetching(true));
-    dispatch(hideNote());
     apiMethod(data)
         .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
             let res = response.data;
-            dispatch(toggleIsFetching(false));
             if (res.status) {
                 dispatch(setNote({msg: res.message, type: "success", error: false, success: true}));
                 dispatch(reset('todos'));
@@ -96,7 +92,6 @@ const _handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
                 dispatch(setNote({msg: res.message, type: "error", error: true, success: false}));
             }
         }).catch((error:any) => {
-        dispatch(toggleIsFetching(false));
         error.response && dispatch(setNote({
             msg: error.response.data.message,
             type: "error",
