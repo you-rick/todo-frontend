@@ -8,7 +8,7 @@ import {User} from "../../shared/interfaces/user.interface";
 import {setAuthStatus, setProfileData} from "../profileReducer";
 
 const cookies = new Cookies();
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Workers
 export function* appInitWorker() {

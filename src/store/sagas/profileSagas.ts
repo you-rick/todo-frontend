@@ -24,6 +24,7 @@ import {
 export function* userRegisterWorker(action: userRegisterApiAction) {
     try {
         const response: AxiosResponse<ApiUserResponse<User>> = yield call(profileAPI.register, action.payload);
+        console.log(response);
         const {message, status} = response?.data;
         if (status) {
             yield put(setNote({msg: message, type: "success", error: false, success: true}));
