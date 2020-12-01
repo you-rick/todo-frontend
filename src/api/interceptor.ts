@@ -1,5 +1,5 @@
-import {axiosInstance} from "./api";
-import {hideNote, setNote} from "../store/notificationReducer";
+import {axiosInstance} from "./index";
+import {setNote} from "../store/notificationReducer";
 import {toggleIsFetching} from "../store/appReducer";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 
@@ -7,7 +7,6 @@ export const AxiosInterceptor = (store: any) => {
     const {dispatch} = store;
 
     axiosInstance.interceptors.request.use((req:AxiosRequestConfig) => {
-        dispatch(hideNote());
         dispatch(toggleIsFetching(true));
         return req;
 

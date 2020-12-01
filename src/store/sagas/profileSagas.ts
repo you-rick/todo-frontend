@@ -2,7 +2,7 @@ import {takeLatest, put, call} from 'redux-saga/effects';
 import {setNote} from "../notificationReducer";
 import {reset} from "redux-form";
 import {push} from "connected-react-router";
-import {profileAPI} from "../../api/api";
+import {profileAPI} from "../../api";
 import {AxiosResponse} from "axios";
 import {ApiUserResponse} from "../../shared/interfaces/api-response.interface";
 import {User} from "../../shared/interfaces/user.interface";

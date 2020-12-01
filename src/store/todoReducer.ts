@@ -1,16 +1,13 @@
-import {setNote} from "./notificationReducer";
-import {todoAPI} from "../api/api";
-import {reset} from "redux-form";
-import {ApiTodoResponse} from "../shared/interfaces/api-response.interface";
-import {AxiosResponse} from "axios";
 import {Todo, TodoStateInterface} from "../shared/interfaces/todo.interface";
-import {AppThunk} from "../shared/interfaces/app-thunk.interface";
-
 
 // Actions
 const SET_TODOS = 'SET_TODOS';
 const SET_CURRENT_TODO = 'SET_CURRENT_TODO';
 const RESET_CURRENT_TODO = 'RESET_CURRENT_TODO';
+export const API_GET_TODOS_REQUEST = 'API_GET_TODOS_REQUEST';
+export const API_POST_TODO_REQUEST = 'API_POST_TODO_REQUEST';
+export const API_UPDATE_TODO_REQUEST = 'API_UPDATE_TODO_REQUEST';
+export const API_DELETE_TODO_REQUEST = 'API_DELETE_TODO_REQUEST';
 
 // Initial Data
 let initialState:TodoStateInterface = {
@@ -48,76 +45,47 @@ interface SetCurrentTodoAction {
 interface ResetCurrentTodoAction {
     type: typeof RESET_CURRENT_TODO
 }
+interface getTodosApiAction {
+    type: typeof API_GET_TODOS_REQUEST
+}
+export interface postTodoApiAction {
+    type: typeof API_POST_TODO_REQUEST,
+    payload: Todo
+}
+export interface updateTodoApiAction {
+    type: typeof API_UPDATE_TODO_REQUEST,
+    payload: Todo
+}
+export interface deleteTodoApiAction {
+    type: typeof API_DELETE_TODO_REQUEST,
+    payload: Todo['_id']
+}
 
 export type TodoActionTypes = SetTodosAction | SetCurrentTodoAction | ResetCurrentTodoAction;
 
 // Action Creators
 export const setTodos = (todos:Array<Todo>):SetTodosAction => ({
-    type: SET_TODOS,
-    todos
+    type: SET_TODOS, todos
 });
 export const setCurrentTodo = (data:Todo):SetCurrentTodoAction => ({
-    type: SET_CURRENT_TODO,
-    data
+    type: SET_CURRENT_TODO, data
 });
 export const resetCurrentTodo = ():ResetCurrentTodoAction => ({
     type: RESET_CURRENT_TODO
 });
+export const requestTodos = ():getTodosApiAction => ({
+    type: API_GET_TODOS_REQUEST
+});
+export const postTodo = (payload:Todo):postTodoApiAction => ({
+    type: API_POST_TODO_REQUEST, payload
+});
+export const updateTodo = (payload:Todo):updateTodoApiAction => ({
+    type: API_UPDATE_TODO_REQUEST, payload
+});
+export const deleteTodo = (payload:Todo['_id']):deleteTodoApiAction => ({
+    type: API_DELETE_TODO_REQUEST, payload
+});
 
-
-
-// Thunks
-export const requestTodos = ():AppThunk => {
-    return (dispatch:any) => {
-        todoAPI.getTodos()
-            .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
-                let res = response.data;
-                if (res.status) {
-                    dispatch(setTodos(res.data));
-                }
-            });
-    }
-};
-
-const _handleTodo = (dispatch:any, data:Todo | Todo['_id'] , apiMethod:any) => {
-    apiMethod(data)
-        .then((response:AxiosResponse<ApiTodoResponse<Todo>>) => {
-            let res = response.data;
-            if (res.status) {
-                dispatch(setNote({msg: res.message, type: "success", error: false, success: true}));
-                dispatch(reset('todos'));
-                 dispatch(requestTodos());
-                dispatch(resetCurrentTodo());
-            } else {
-                dispatch(setNote({msg: res.message, type: "error", error: true, success: false}));
-            }
-        }).catch((error:any) => {
-        error.response && dispatch(setNote({
-            msg: error.response.data.message,
-            type: "error",
-            error: true,
-            success: false
-        }));
-    });
-};
-
-export const postTodo = (data:Todo):AppThunk => {
-    return (dispatch:any) => {
-        _handleTodo(dispatch, data, todoAPI.addTodo.bind(todoAPI));
-    }
-};
-
-export const updateTodo = (data:Todo):AppThunk => {
-    return (dispatch:any) => {
-        _handleTodo(dispatch, data, todoAPI.updateTodo.bind(todoAPI));
-    }
-};
-
-export const deleteTodo = (id:Todo['_id']):AppThunk => {
-    return (dispatch:any) => {
-        _handleTodo(dispatch, id, todoAPI.deleteTodo.bind(todoAPI));
-    }
-};
 
 
 export default todoReducer;

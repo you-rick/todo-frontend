@@ -38,8 +38,7 @@ export type NotificationActionTypes = SetNoteAction | HideNoteAction;
 
 // Action Creators
 export const setNote = (body:NotificationStateInterface):SetNoteAction => ({
-    type: SET_NOTE,
-    body: body
+    type: SET_NOTE, body
 });
 export const hideNote = ():HideNoteAction => ({
     type: HIDE_NOTE

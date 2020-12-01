@@ -26,6 +26,7 @@ const store = createStore(
 
 sagaMiddleware.run(rootSaga);
 AxiosInterceptor(store);
+
 // @ts-ignore
 window.__store__ = store;
 

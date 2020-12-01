@@ -45,8 +45,7 @@ export type AppActionTypes = ToggleIsFetchingAction | InitializedSuccessAction |
 
 // Action Creators
 export const toggleIsFetching = (isDataFetching: boolean): ToggleIsFetchingAction => ({
-    type: TOGGLE_IS_FETCHING,
-    isDataFetching
+    type: TOGGLE_IS_FETCHING, isDataFetching
 });
 export const initializedSuccess = (): InitializedSuccessAction => ({
     type: INITIALIZED_SUCCESS

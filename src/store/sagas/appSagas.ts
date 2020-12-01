@@ -1,7 +1,7 @@
 import {takeEvery, put, call} from 'redux-saga/effects';
 import Cookies from "universal-cookie";
 import {initializedSuccess, toggleIsFetching, INITIALIZE_APP} from "../appReducer";
-import {profileAPI} from "../../api/api";
+import {profileAPI} from "../../api";
 import {AxiosResponse} from "axios";
 import {ApiUserResponse} from "../../shared/interfaces/api-response.interface";
 import {User} from "../../shared/interfaces/user.interface";
