@@ -1,14 +1,11 @@
-import React, {useState, useEffect, FC, ChangeEvent} from 'react';
-import {Box, MenuItem, Button, Grid} from "@material-ui/core";
-import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {renderTextField, renderSelectField} from "../../../shared/FormControls/FormControls";
+import React, {FC} from 'react';
+import { reduxForm} from "redux-form";
 import {postTodo, updateTodo, resetCurrentTodo} from "../../../../store/todoReducer";
 import {connect, ConnectedProps} from "react-redux";
 import validate from "./validate";
-import s from "./TodosForm.module.scss";
-import {statusList} from "../statusList";
-import {Todo, TodoStateInterface, FormTodoInterface} from "../../../../shared/interfaces/todo.interface";
+import {Todo, TodoStateInterface} from "../../../../shared/interfaces/todo.interface";
 import {RootStateInterface} from "../../../../shared/interfaces/root-state.intefrace";
+import TodosFormBox from "./TodosFormBox";
 
 // Types
 interface Props {
@@ -17,103 +14,29 @@ interface Props {
     resetCurrentTodo: () => void
 }
 
-type FormProps = Props & InjectedFormProps<{}, Props>;
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-// Component
-const TodosFormBox: FC<FormProps> = (props) => {
-    const {handleSubmit, currentTodo, resetCurrentTodo, todos} = props;
-    const [status, setStatus] = useState(0);
-    const [editMode, setEditMode] = useState(false);
 
-    useEffect(() => {
-        handleReset();
-    }, [todos]);
-
-    useEffect(() => {
-        if (currentTodo._id) {
-            props.initialize({
-                _id: currentTodo._id,
-                title: currentTodo.title,
-                status: currentTodo.status
-            });
-            setStatus(currentTodo.status);
-            setEditMode(true);
-        }
-    }, [currentTodo]);
-
-    const handleStatusChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setStatus(parseInt(event.target.value));
-    };
-    const handleReset = () => {
-        resetCurrentTodo();
-        setStatus(currentTodo.status);
-        setEditMode(false);
-        setStatus(0);
-        props.initialize({});
-    };
-
-    return (
-        <Box p="1rem 0 0">
-            <form onSubmit={handleSubmit}>
-                <Grid container justify="space-between" alignItems="flex-start">
-                    <Field
-                        name="title"
-                        label="To do"
-                        variant="outlined"
-                        margin="normal"
-                        className={s.fieldBox}
-                        component={renderTextField}
-                    />
-                    <Field
-                        name="status"
-                        label="select status"
-                        variant="outlined"
-                        margin="normal"
-                        inputProps={{value: status}}
-                        className={s.fieldBox}
-                        onChange={handleStatusChange}
-                        component={renderSelectField}
-                    >
-                        {statusList.map((option) => (
-                            <MenuItem key={option.id} value={option.id}>
-                                {option.title}
-                            </MenuItem>
-                        ))}
-                    </Field>
-                    <Button type="submit" className={s.submit} variant="contained" color="primary">
-                        {editMode ? 'Update' : 'Add'}
-                    </Button>
-                    {editMode &&
-                    <Button type="button" className={s.submit} variant="outlined" color="primary" onClick={handleReset}>
-                        Cancel
-                    </Button>
-                    }
-                </Grid>
-            </form>
-        </Box>
-    )
-};
-
+// Redux Form
 const TodoReduxForm = reduxForm<{}, Props>({form: 'todos', validate})(TodosFormBox);
 
 // HOC
-const TodosForm: FC<PropsFromRedux> = (props) => {
+const TodosForm: FC<PropsFromRedux> = ({authorId, currentTodo, todos, updateTodo, postTodo, resetCurrentTodo}) => {
     const onSubmit = (data: any) => {
-        data.author = props.authorId;
+        data.author = authorId;
 
-        if (props.currentTodo._id) {
-            props.updateTodo(data);
+        if (currentTodo._id) {
+            updateTodo(data);
         } else {
-            props.postTodo(data);
+            postTodo(data);
         }
     };
 
     return <TodoReduxForm
         onSubmit={onSubmit}
-        currentTodo={props.currentTodo}
-        todos={props.todos}
-        resetCurrentTodo={props.resetCurrentTodo}
+        currentTodo={currentTodo}
+        todos={todos}
+        resetCurrentTodo={resetCurrentTodo}
     />
 };
 

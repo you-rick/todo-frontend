@@ -14,21 +14,22 @@ type Props = PropsFromRedux & TodoInterface;
 
 // Component
 const Todo:FC<Props> = (props) => {
-    const status = statusList.filter(el => el.id === props.status);
+    const {_id, title, status, deleteTodo, setCurrentTodo} = props;
+    const todoStatus = statusList.filter(el => el.id === status);
 
     const handleDelete = ():void => {
-        props.deleteTodo(props._id);
+        deleteTodo(_id);
     };
 
     const handleEdit = ():void => {
-      props.setCurrentTodo(props);
+      setCurrentTodo(props);
       window.scrollTo(0, 0);
     };
 
     return (
-        <Grid container justify="space-between" alignItems="center" className={s.todoWrap} data-status={`todoLabel_${status[0].id}`}>
-            <Typography className={s.task}>{props.title}</Typography>
-            <Typography>{status[0].title}</Typography>
+        <Grid container justify="space-between" alignItems="center" className={s.todoWrap} data-status={`todoLabel_${todoStatus[0].id}`}>
+            <Typography className={s.task}>{title}</Typography>
+            <Typography>{todoStatus[0].title}</Typography>
             <div>
                 <IconButton aria-label="edit" color="primary" className={s.iconBtn} onClick={handleEdit}>
                     <EditIcon fontSize="small"/>

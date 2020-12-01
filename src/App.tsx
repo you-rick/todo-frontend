@@ -19,13 +19,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & {}
 
 // Component
-const AppContainer:FC<Props> = (props) => {
+const AppContainer:FC<Props> = ({initializeApp, initialized, isDataFetching, notification, hideNote}) => {
     useEffect(() => {
-        props.initializeApp();
-    }, []);
+        initializeApp();
+    }, [initializeApp]);
 
 
-    if (!props.initialized) {
+    if (!initialized) {
         return <Preloader/>
     }
 
@@ -42,11 +42,8 @@ const AppContainer:FC<Props> = (props) => {
                 </Switch>
             </div>
             <Footer/>
-            <Notification
-                type={props.notification.type}
-                msg={props.notification.msg}
-                hideNote={props.hideNote}
-            />
+            <Notification type={notification.type} msg={notification.msg} hideNote={hideNote}/>
+            {isDataFetching && <Preloader/>}
         </div>
     );
 };
@@ -62,8 +59,8 @@ const mapDispatchToProps = {
     hideNote: hideNote,
     initializeApp: initializeApp
 };
-const connector = connect(mapStateToProps, mapDispatchToProps);
 
+const connector = connect(mapStateToProps, mapDispatchToProps);
 const App = compose<ComponentType>(withRouter, connector)(AppContainer);
 
 export default App;

@@ -15,10 +15,10 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & {}
 
 // Component
-const Todos:FC<Props> = (props) => {
+const Todos: FC<Props> = ({isAuth, requestTodos, name, todos}) => {
     useEffect(() => {
-        props.isAuth && props.requestTodos();
-    }, [props.isAuth]);
+        isAuth && requestTodos();
+    }, [isAuth]);
 
 
     if (!cookies.get('token')) {
@@ -29,12 +29,12 @@ const Todos:FC<Props> = (props) => {
         <Box p="4rem 0">
             <Container maxWidth="md">
                 <Typography variant="h5" component="h1" gutterBottom>
-                    Hello <strong>{props.name}</strong>, here is your Todos list
+                    Hello <strong>{name}</strong>, here is your Todos list
                 </Typography>
                 <TodosForm/>
 
                 <Box p="2rem 0 0">
-                    {props.todos.map((todo, index) => <Todo key={index} {...todo} />)}
+                    {todos.map((todo, index) => <Todo key={index} {...todo} />)}
                 </Box>
             </Container>
         </Box>
@@ -42,7 +42,7 @@ const Todos:FC<Props> = (props) => {
 };
 
 // React-Redux settings
-const mapStateToProps = (state:RootStateInterface) => ({
+const mapStateToProps = (state: RootStateInterface) => ({
     isAuth: state.profile.isAuth,
     name: state.profile.name,
     todos: state.todos.list
